@@ -8,7 +8,8 @@
                         type="text"
                         class="search-bar"
                         placeholder="Enter country or city..."
-                        aria-labelledby="city country or zip input"
+                        aria-label="city country or zip input"
+                        aria-selected
                         v-model="query"
                         @keypress.enter="fetchWeather"
                     />
@@ -173,8 +174,8 @@ export default {
     margin: 35px auto 0;
     background-image: linear-gradient(
             to bottom,
-            rgba(0, 0, 0, 0.25),
-            rgba(0, 0, 0, 0.75)
+            rgba(0, 0, 0, 0.18),
+            rgba(0, 0, 0, 0.7)
         ),
         url("../assets/images/cold-bg.jpg");
     background-size: cover;
@@ -185,7 +186,7 @@ export default {
 .title {
     margin-bottom: 30px;
     color: var(--text-color);
-    font-family: "lato", sans-serif;
+    /* font-family: "lato", sans-serif; */
     text-shadow: 2px 2px rgba(0, 0, 0, 0.25);
 }
 
@@ -217,14 +218,14 @@ main {
     outline: none;
     background: none;
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.85);
     border-radius: 0px 12px 0px 12px;
     transition: 0.4s;
 }
 
 .search-box .search-bar:focus {
     box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.25);
-    background-color: rgba(255, 255, 255, 0.75);
+    /* background-color: rgba(255, 255, 255, 0.75); */
     border-radius: 12px 0px 12px 0px;
 }
 

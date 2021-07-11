@@ -13,7 +13,7 @@
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap");
 
-@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;700&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;700&display=swap"); */
 
 *,
 body {
@@ -36,7 +36,7 @@ body {
     -moz-osx-font-smoothing: grayscale;
     background: linear-gradient(
         to bottom right,
-        rgba(219, 215, 215, 0.5),
+        rgba(219, 215, 215, 0.4),
         rgba(0, 0, 0, 0.25)
     );
     color: #2c3e50;
@@ -61,7 +61,7 @@ body {
 }
 
 #nav a.router-link-exact-active {
-    color: #129c5e;
+    color: #108f56;
     background-color: #fff;
 }
 
