@@ -122,7 +122,7 @@ export default {
 
             let icon = this.weather.weather[0].icon;
             this.iconSrc =
-                "http://openweathermap.org/img/wn/" + icon + "@2x.png";
+                "https://openweathermap.org/img/wn/" + icon + "@2x.png";
 
             this.iconAlt = `${this.weather.weather[0].main} icon`;
 
@@ -277,7 +277,7 @@ main {
 .weather-description-container {
     display: flex;
     /* justify-content: space-evenly; */
-    /* align-items: center; */
+    align-items: center;
 }
 
 .weather-description-container img {
