@@ -90,7 +90,7 @@ export default {
             // },
 
             api_key: "55facb388257da5750113f4404c6dd36",
-            url_base: "http://api.openweathermap.org/data/2.5/",
+            url_base: "https://api.openweathermap.org/data/2.5/",
             query: "",
             weather: {},
             unit: "metric",
@@ -129,7 +129,7 @@ export default {
 
             let icon = this.weather.weather[0].icon;
             this.iconSrc =
-                "http://openweathermap.org/img/wn/" + icon + "@2x.png";
+                "https://openweathermap.org/img/wn/" + icon + "@2x.png";
 
             this.iconAlt = `${this.weather.weather[0].main} icon`;
 
