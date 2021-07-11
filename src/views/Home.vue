@@ -1,18 +1,267 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div class="home">
+        <div class="container" :class="[isWarm ? 'warm' : '']">
+            <main>
+                <h1 class="title">Weather App</h1>
+                <div class="search-box">
+                    <input
+                        type="text"
+                        class="search-bar"
+                        placeholder="Enter country or city..."
+                        v-model="query"
+                        @keypress.enter="fetchWeather"
+                    />
+                    <i
+                        class="fas fa-search-location"
+                        title="search weather"
+                        aria-labelledby="search weather icon"
+                        @click.prevent="fetchWeather"
+                    ></i>
+                </div>
+
+                <div class="errorMessage"></div>
+
+                <div class="weather-wrap" v-if="isValid">
+                    <div class="location-box">
+                        <div class="location">
+                            {{ weather.name }}, {{ weather.sys.country }}
+                        </div>
+                        <div class="date">{{ dateBuilder() }}</div>
+                    </div>
+
+                    <div class="weather-box">
+                        <div class="temp">{{ roundTemp() }}&deg;C</div>
+                        <div class="weather">{{ weather.weather[0].main }}</div>
+                        <p class="description">
+                            ...{{ weather.weather[0].description }}
+                        </p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+// import { mapState } from "vuex";
+import days from "../data/days";
+import months from "../data/months";
 
 export default {
-  name: 'Home',
-  components: {
-    HelloWorld
-  }
-}
+    name: "Home",
+    computed: {
+        isValid() {
+            return typeof this.weather.main != "undefined";
+        },
+        isWarm() {
+            return this.isValid && this.weather.main.temp > 18;
+        },
+
+        // ...mapState(["days", "months"]),
+    },
+    data() {
+        return {
+            // "http://api.openweathermap.org/data/2.5/forecast?id=524901&appid={API key}"
+
+            // "https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}"
+
+            // params: {
+            //     forecast: "forecast",
+            //     road_risk: "roadrisk",
+            // },
+
+            api_key: "55facb388257da5750113f4404c6dd36",
+            url_base: "http://api.openweathermap.org/data/2.5/",
+            query: "",
+            weather: {},
+            days,
+            months,
+        };
+    },
+    methods: {
+        fetchWeather() {
+            fetch(
+                `${this.url_base}weather?q=${this.query}&units=metric&APPID=${this.api_key}`
+            )
+                .then((resp) => {
+                    return resp.json();
+                })
+                // .then(this.setResults);
+                .then((results) => {
+                    console.log(results);
+                    this.weather = results;
+                })
+                .catch(this.showError);
+
+            this.query = "";
+        },
+        // setResults(results) {
+        //     this.weather = results;
+        // },
+
+        showError(err) {
+            console.log(err.message);
+        },
+
+        roundTemp() {
+            return Math.floor(this.weather.main.temp);
+        },
+
+        dateBuilder() {
+            let d = new Date();
+
+            let day = this.days[d.getDay()];
+            let month = this.months[d.getMonth()];
+            let year = d.getFullYear();
+            let currentDate = d.getDate();
+
+            return `${day} ${currentDate} ${month} ${year}`;
+        },
+    },
+    mounted() {
+        // console.log(this.$store.state.days);
+        // console.log(this.days);
+    },
+};
 </script>
+
+<style scoped>
+.home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+.container {
+    transition: 0.4s;
+    max-width: 700px;
+    margin: 35px auto 0;
+    background-image: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.25),
+            rgba(0, 0, 0, 0.75)
+        ),
+        url("../assets/images/cold-bg.jpg");
+    background-size: cover;
+    background-position: center;
+    border-radius: 3px;
+}
+
+.title {
+    margin-bottom: 30px;
+    color: var(--text-color);
+    font-family: "lato", sans-serif;
+    text-shadow: 2px 2px rgba(0, 0, 0, 0.25);
+}
+
+main {
+    padding: 30px 60px;
+    min-height: 550px;
+    max-width: 500px;
+    text-align: center;
+}
+
+.container.warm {
+    background-image: url("../assets/images/warm-bg.jpg");
+}
+
+.search-box {
+    width: 100%;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.search-box .search-bar {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    color: #2c3e50;
+    font-size: 17px;
+    appearance: none;
+    border: none;
+    outline: none;
+    background: none;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 0px 12px 0px 12px;
+    transition: 0.4s;
+}
+
+.search-box .search-bar:focus {
+    box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.25);
+    background-color: rgba(255, 255, 255, 0.75);
+    border-radius: 12px 0px 12px 0px;
+}
+
+.search-box i {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px;
+    font-size: 18px;
+    text-shadow: 1.2px -1.1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.location-box {
+    padding: 8px;
+}
+
+.location-box .location {
+    color: var(--text-color);
+    font-size: 32px;
+    font-weight: 500;
+    text-shadow: 1.7px 1.5px rgba(0, 0, 0, 0.25);
+    margin-bottom: 5px;
+}
+
+.location-box .date {
+    color: #2c3e50;
+    font-size: 17px;
+    font-weight: 300;
+    font-style: italic;
+}
+
+.weather-box {
+    color: var(--text-color);
+}
+
+.weather-box .temp {
+    display: inline-block;
+    padding: 10px 25px;
+    font-size: 102px;
+    font-weight: 900;
+    text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 12px;
+    margin: 30px 0px;
+    box-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+.weather-box .weather {
+    font-size: 48px;
+    font-weight: 700;
+    font-style: italic;
+    text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+.description {
+    font-size: 17px;
+    font-weight: 300;
+    font-style: italic;
+    color: #c2c2c2;
+    margin-left: 20px;
+}
+
+@media screen and (max-width: 425px) {
+    main {
+        padding: 25px 15px;
+    }
+    .weather-box .temp {
+        padding: 10px 20px;
+        font-size: 98px;
+    }
+}
+</style>
