@@ -47,7 +47,7 @@ body {
     left: 0%;
     right: 0%;
     text-align: center;
-    padding: 30px 0;
+    padding: 25px 0;
     /* background-color: #fff; */
     z-index: 1;
 }
