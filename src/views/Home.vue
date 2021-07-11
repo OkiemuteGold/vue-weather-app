@@ -16,6 +16,7 @@
                         title="search weather"
                         aria-labelledby="search weather icon"
                         @click.prevent="fetchWeather"
+                        v-show="query !== ''"
                     ></i>
                 </div>
 
@@ -31,10 +32,15 @@
 
                     <div class="weather-box">
                         <div class="temp">{{ roundTemp() }}&deg;C</div>
-                        <div class="weather">{{ weather.weather[0].main }}</div>
-                        <p class="description">
-                            ...{{ weather.weather[0].description }}
-                        </p>
+                        <div class="weather-description-container">
+                            <img :src="iconSrc" :alt="iconAlt" />
+                            <div class="weather">
+                                <span>{{ weather.weather[0].main }}</span>
+                                <p class="description">
+                                    ...{{ weather.weather[0].description }}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -74,14 +80,31 @@ export default {
             url_base: "http://api.openweathermap.org/data/2.5/",
             query: "",
             weather: {},
+            unit: "metric",
+            searchMethod: "",
+            iconSrc: "",
+            iconAlt: "",
             days,
             months,
         };
     },
     methods: {
-        fetchWeather() {
-            fetch(
-                `${this.url_base}weather?q=${this.query}&units=metric&APPID=${this.api_key}`
+        userSearchMethod() {
+            let city = this.query;
+            if (city.length === 5 && Number.parseInt(city) + "" === city) {
+                this.searchMethod = "zip";
+            } else {
+                this.searchMethod = "q";
+            }
+            console.log(this.searchMethod);
+            console.log(city);
+            return this.searchMethod;
+        },
+
+        async fetchWeather() {
+            this.userSearchMethod(this.query);
+            await fetch(
+                `${this.url_base}weather?${this.searchMethod}=${this.query}&units=${this.unit}&APPID=${this.api_key}`
             )
                 .then((resp) => {
                     return resp.json();
@@ -92,6 +115,12 @@ export default {
                     this.weather = results;
                 })
                 .catch(this.showError);
+
+            let icon = this.weather.weather[0].icon;
+            this.iconSrc =
+                "http://openweathermap.org/img/wn/" + icon + "@2x.png";
+
+            this.iconAlt = `${this.weather.weather[0].main} icon`;
 
             this.query = "";
         },
@@ -104,7 +133,7 @@ export default {
         },
 
         roundTemp() {
-            return Math.floor(this.weather.main.temp);
+            return Math.round(this.weather.main.temp);
         },
 
         dateBuilder() {
@@ -169,14 +198,14 @@ main {
 
 .search-box {
     width: 100%;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     position: relative;
 }
 
 .search-box .search-bar {
     display: block;
     width: 100%;
-    padding: 15px;
+    padding: 10px 15px;
     color: #2c3e50;
     font-size: 17px;
     appearance: none;
@@ -197,12 +226,13 @@ main {
 
 .search-box i {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 8px;
+    right: 8px;
     padding: 5px;
-    font-size: 18px;
+    font-size: 17px;
     text-shadow: 1.2px -1.1px rgba(0, 0, 0, 0.1);
     cursor: pointer;
+    transition: 0.4s;
 }
 
 .location-box {
@@ -236,8 +266,19 @@ main {
     text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
     background-color: rgba(255, 255, 255, 0.25);
     border-radius: 12px;
-    margin: 30px 0px;
+    margin: 25px 0px;
     box-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+.weather-description-container {
+    display: flex;
+    /* justify-content: space-evenly; */
+    /* align-items: center; */
+}
+
+.weather-description-container img {
+    max-width: 100%;
+    height: auto;
 }
 
 .weather-box .weather {
@@ -245,6 +286,7 @@ main {
     font-weight: 700;
     font-style: italic;
     text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
+    flex: 2;
 }
 
 .description {
