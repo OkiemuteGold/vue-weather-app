@@ -129,7 +129,7 @@ export default {
 
             let icon = this.weather.weather[0].icon;
             this.iconSrc =
-                "https://openweathermap.org/img/wn/" + icon + "@2x.png";
+                "http://openweathermap.org/img/wn/" + icon + "@2x.png";
 
             this.iconAlt = `${this.weather.weather[0].main} icon`;
 
@@ -161,6 +161,9 @@ export default {
     mounted() {
         // console.log(this.$store.state.days);
         // console.log(this.days);
+    },
+    beforeMount() {
+        this.fetchWeather;
     },
 };
 </script>
