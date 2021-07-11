@@ -8,26 +8,32 @@
                         type="text"
                         class="search-bar"
                         placeholder="Enter country or city..."
+                        aria-labelledby="city country or zip input"
                         v-model="query"
                         @keypress.enter="fetchWeather"
                     />
                     <i
                         class="fas fa-search-location"
                         title="search weather"
-                        aria-labelledby="search weather icon"
+                        aria-labelledby="search icon"
+                        role="search weather"
                         @click.prevent="fetchWeather"
                         v-show="query !== ''"
                     ></i>
                 </div>
 
-                <div class="errorMessage"></div>
+                <!-- <div class="errorMessage"></div> -->
 
                 <div class="weather-wrap" v-if="isValid">
                     <div class="location-box">
                         <div class="location">
                             {{ weather.name }}, {{ weather.sys.country }}
                         </div>
-                        <div class="date">{{ dateBuilder() }}</div>
+                        <div class="date">
+                            <time datetime="">
+                                {{ dateBuilder() }}
+                            </time>
+                        </div>
                     </div>
 
                     <div class="weather-box">
@@ -96,8 +102,6 @@ export default {
             } else {
                 this.searchMethod = "q";
             }
-            console.log(this.searchMethod);
-            console.log(city);
             return this.searchMethod;
         },
 
@@ -111,7 +115,7 @@ export default {
                 })
                 // .then(this.setResults);
                 .then((results) => {
-                    console.log(results);
+                    // console.log(results);
                     this.weather = results;
                 })
                 .catch(this.showError);
