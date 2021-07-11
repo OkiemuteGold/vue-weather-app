@@ -36,7 +36,7 @@ body {
     -moz-osx-font-smoothing: grayscale;
     background: linear-gradient(
         to bottom right,
-        rgba(219, 215, 215, 0.4),
+        rgba(219, 215, 215, 0.84),
         rgba(0, 0, 0, 0.25)
     );
     color: #2c3e50;

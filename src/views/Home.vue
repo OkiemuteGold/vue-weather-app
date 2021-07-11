@@ -8,15 +8,14 @@
                         type="text"
                         class="search-bar"
                         placeholder="Enter country or city..."
-                        aria-label="city country or zip input"
-                        aria-selected
+                        aria-roledescription="city country or zip input"
                         v-model="query"
                         @keypress.enter="fetchWeather"
                     />
                     <i
                         class="fas fa-search-location"
                         title="search weather"
-                        aria-labelledby="search icon"
+                        aria-roledescription="search icon"
                         role="search weather"
                         @click.prevent="fetchWeather"
                         v-show="query !== ''"
